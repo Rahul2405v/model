@@ -1,6 +1,7 @@
 import os
 import logging
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from pymongo import MongoClient
 import requests
 from dotenv import load_dotenv
@@ -75,6 +76,10 @@ def run_vector_search(query_vector, num_candidates=50, limit=10):
 # Flask App
 # ------------------------------------------------------------
 app = Flask(__name__)
+
+# Configure CORS. By default allow any origin; override via CORS_ALLOWED_ORIGINS env var
+CORS_ALLOWED = os.getenv("CORS_ALLOWED_ORIGINS", "*")
+CORS(app, resources={r"/*": {"origins": CORS_ALLOWED}})
 
 @app.route("/search", methods=["POST"])
 def search():
